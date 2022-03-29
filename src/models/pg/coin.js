@@ -17,6 +17,14 @@ module.exports = function (sequelize, DataTypes) {
       code: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
+      },
+      price: {
+        type: DataTypes.DECIMAL,
+      },
+      priceDate: {
+        type: DataTypes.DATE,
+        defaultValue: () => new Date(),
       },
     },
     {
@@ -35,6 +43,22 @@ module.exports = function (sequelize, DataTypes) {
   Coin.findByCoinCode = function (code, tOpts = {}) {
     return Coin.findOne(Object.assign({ where: { code } }, tOpts));
   };
+
+  Coin.createCoin = function (name, code, tOpts = {}) {
+    return Coin.create(
+      {
+        name: name,
+        code: code,
+      }, tOpts);
+  };
+
+  Coin.updateCoinPrice = function (coin,price) {
+    coin.price = price;
+    coin.priceDate = new Date();
+    coin.save();
+    return coin;
+  };
+
 
   return Coin;
 };

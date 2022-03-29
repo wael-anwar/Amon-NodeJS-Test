@@ -19,7 +19,7 @@ describe('Model:coin', () => {
   });
 
   it('Should create', async () => {
-    const coin = await Models.Coin.create({
+    const coin = await Models.Coin.createCoin({
       name: 'Bitcoin Cash',
       code: 'BCH',
     });
@@ -36,12 +36,22 @@ describe('Model:coin', () => {
   });
 
   it('Should filterKeys', async () => {
-    const coin = await Models.Coin.create({
+    const coin = await Models.Coin.createCoin({
       name: 'Amon',
       code: 'AMN',
     });
 
     const filterCoin = coin.filterKeys();
     expect(Object.keys(filterCoin).length).to.eq(3);
+  });
+
+  it('Should update coin price', async () => {
+    await Models.Coin.createCoin('Bitcoin Cash', 'BCH', 'bitcoin-cash');
+    const coin = await Models.Coin.updateCoinPrice(coin, 375.65);
+
+    //check on price
+    expect(coin.price).to.eq(375.65);
+    //check on price date
+    expect(coin.priceDate.valueOf()).to.approximately(new Date().valueOf(), 100);
   });
 });
